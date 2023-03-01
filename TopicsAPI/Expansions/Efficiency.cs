@@ -1,24 +1,26 @@
 
 using System.Diagnostics;
 
-namespace TopicsAPI.Exception
+namespace TopicsAPI.Exceptions
 {
     public class Efficiency
     {
-        //public static Action _action {get;set;}
+        public static Action _action { get; set; }
         public static Func<object> _func { get; set; }
         public long CPU { get; set; }
         public long Memory { get; set; }
         public TimeSpan Time { get; set; }
 
-        //public Efficiency (Action action){
-        //    _action = action;
-        //}
+        public Efficiency(Action action)
+        {
+            _action = action;
+        }
 
         public Efficiency(Func<object> func)
         {
             _func = func;
         }
+
 
         public object getEfficiency()
         {
@@ -26,7 +28,8 @@ namespace TopicsAPI.Exception
             var process = Process.GetCurrentProcess();
             var startTime = process.TotalProcessorTime;
             stopwatch.Start();
-            _func.Invoke();
+            if(_action != null) { _action.Invoke(); }
+            if(_func!=null) { _func.Invoke(); }
             stopwatch.Stop();
             var endTime = process.TotalProcessorTime;
 
@@ -37,11 +40,12 @@ namespace TopicsAPI.Exception
             {
                 Time = executionTime,
                 Memory = executionMemory,
-                CPU = executionCpu,
+                //CPU = executionCpu,
             };
         }
 
 
+   
 
     }
 }
